@@ -9,7 +9,7 @@ def kfreq(seqs, k, d, a):
 	for s in seqs:
 		for i in range(d, len(s) -k +1 -a):
 			kmer = s[i:i+k]
-			if kmer not in count: count[kmer] = 1
+			if kmer not in count: count[kmer] = 0
 			count[kmer] += 1
 			total += 1
 

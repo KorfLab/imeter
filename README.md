@@ -34,3 +34,9 @@ The file looks like this (4 lines shown of 142,779):
 	AT3G02220.1     753     870     -       331     309     542     2861    2968    2       504     340     839     48      503     GTACTTGTACCTTGAAGACAGTCTTTCTTCTACTTATGCTAGATGCTGGTTTCCTTAAGAGTGGGTTTAGTAGACAAGATATTAAACTAATCTTGAGGTAATTATTCGTTTCTCGCAG
 	AT3G02220.1     565     688     -       283     249     571     2568    2308    5       471     374     697     25      265     GTTAGTGTTTTCTTTCTTTGCTTTTGTTCTCGTACTTTCTTGGCTAATTAGAGTGTATAGATCAGTATCTTGTTTTATAAGTTGATGTGTTATGGTATTGAAATGGGTATGAAACTGATAACAG
 
+## Notes ##
+
++ Leaf tissue is where the original experiments were done
++ Don't forget to count both strands
++ Deal with alternative isoforms
++ Some sequences with degenerate symbols (e.g. Y)
