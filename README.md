@@ -40,3 +40,14 @@ The file looks like this (4 lines shown of 142,779):
 + Don't forget to count both strands
 + Deal with alternative isoforms
 + Some sequences with degenerate symbols (e.g. Y)
++ Proper program with argparse
++ Put functions into some shared library
++ Trainer program
++ Decoder program
++ Scientific studies
++ Experimental data and controls
++ Design actual projects
++ Counting
+	+ Kmer-based
+	+ length normalized
+	+ Expression
