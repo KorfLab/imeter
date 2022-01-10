@@ -1,0 +1,30 @@
+import RelevantLibraries
+
+User input:
+  Args:
+    + input file--
+    + DistProx cutoff
+    + k size
+    + output file (default to console)
+    + xfold validation (default #1)
+
+main:
+  +pass input to parser/(i/o), return a list, specify if prox or dist
+  DistProx {} = iofile.parse(fp, cutoff?, prox)
+
+  for trainset, testset in iofile.xfold(DistProx, userarg.xfold)
+    frequencies are done in the math file, calc frequencies
+    proximalfreq
+    distalfreq
+
+    imeter = calculate.score(proximalfreq, distalfreq, k, don, acc)
+    meanscores = statistics.mean(pscores or dscores)
+    avgmeans.append(mean(meanscores))
+
+  io.display(avgmeans)
+
+#scoring relies on if xfold has been implemented, otherwise its just scoring the same dataset, isn't it
+ scores are going to be done similarly to demo...xfold is probably where I want to start.
+
+
+-include a way to train on the entire data set, perhaps as a final output?

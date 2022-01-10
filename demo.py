@@ -17,7 +17,7 @@ def kfreq(seqs, k, d, a):
 	for kmer in count: freq[kmer] = count[kmer] / total
 
 	return freq
-		
+
 
 
 prox = []
@@ -33,7 +33,7 @@ with open(sys.argv[1]) as fp:
 		beg = int(f[1])
 		end = int(f[2])
 		seq = f[-1]
-		
+
 		if end <= pdsplit: prox.append(seq)
 		else:              dist.append(seq)
 
