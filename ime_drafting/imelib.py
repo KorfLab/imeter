@@ -5,6 +5,58 @@ import gzip
 import itertools as iter
 import csv
 
+def kmers(k, init=0, alph='ACGT'):
+	kmers = {}
+	for tup in iter.product(alph, repeat=k):
+		kmer = ''.join(tup)
+		kmers[kmer] = init
+	return kmers
+
+def count2freq(count):
+	freq = {}
+	total = 0
+	for k in count: total += count[k]
+	for k in count: freq[k] = count[k] / total
+	return freq
+
+def train_imeter1(filename, k=5, d=5, a=10, p=400):
+
+	# deal with gzip or std files
+	if filename.endswith('.gz'): fp = gzip.open(filename, 'rt')
+	else:                        fp = open(filename)
+
+	# key parameters, as defaults for function
+	#k = 5   # kmer size
+	#d = 5   # length of donor site
+	#a = 10  # length of acceptor site
+	#p = 400 # proximal-distal split
+
+	# counts
+	prox = kmers(k)
+	dist = kmers(k)
+
+	for line in fp.readlines():
+		f = line.split()
+		beg = int(f[1])
+		seq = f[-1]
+		for i in range(d, len(seq) -k + 1 + a):
+			kmer = seq[i:i+k]
+			if kmer not in prox: continue
+			if beg <= 400: prox[kmer] += 1
+			else:          dist[kmer] += 1
+
+	# freqs
+	pfreq = count2freq(prox)
+	dfreq = count2freq(dist)
+	imeter = {}
+	for kmer in pfreq:
+		imeter[kmer] = math.log2(pfreq[kmer] / dfreq[kmer])
+
+	# done
+	return imeter, pfreq, dfreq
+
+
+
 def generatefilters(): #generates a list of legal kmers. in the future, user specified exceptions could be handled
     filter = {}
     perms = list(iter.product('ACTG', repeat=5))
