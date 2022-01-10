@@ -104,3 +104,9 @@ def scoring(prox, distal, records, trained, k): #calculates the score of a query
 def printscores(records, outfile):
     if outfile is None:
         print('f')
+
+
+if __name__ == '__main__':
+	pass
+	# unit tests will go here
+
