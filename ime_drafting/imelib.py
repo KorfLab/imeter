@@ -19,7 +19,7 @@ def count2freq(count):
 	for k in count: freq[k] = count[k] / total
 	return freq
 
-def train_imeter1(filename, k=5, d=5, a=10, p=400):
+def train_imeter1(filename, k=5, d=5, a=10, t=400):
 
 	# deal with gzip or std files
 	if filename.endswith('.gz'): fp = gzip.open(filename, 'rt')
@@ -29,7 +29,7 @@ def train_imeter1(filename, k=5, d=5, a=10, p=400):
 	#k = 5   # kmer size
 	#d = 5   # length of donor site
 	#a = 10  # length of acceptor site
-	#p = 400 # proximal-distal split
+	#t = 400 # proximal-distal threshold
 
 	# counts
 	prox = kmers(k)
@@ -42,8 +42,8 @@ def train_imeter1(filename, k=5, d=5, a=10, p=400):
 		for i in range(d, len(seq) -k + 1 + a):
 			kmer = seq[i:i+k]
 			if kmer not in prox: continue
-			if beg <= 400: prox[kmer] += 1
-			else:          dist[kmer] += 1
+			if beg <= t: prox[kmer] += 1
+			else:        dist[kmer] += 1
 
 	# freqs
 	pfreq = count2freq(prox)
