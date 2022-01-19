@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+
+import argparse
+import imelib
+import sys
+
+userin = argparse.ArgumentParser(
+    description = 'Evaulate....something lmaoooo, figure out a better message')
+userin.add_argument('--inputfile', required=True, type=str,
+    metavar='<file>', help = 'filepath of dataset for training')
+userin.add_argument('--cutoff', required=True, type=int,
+    metavar='<int>', help = 'cutoff for determining if intron is proximal or distal')
+userin.add_argument('--k', required=True, type=int,
+    metavar='<int>', help = 'size of kmer')
+userin.add_argument('--xfold', required=False, type=int,
+    metavar='<int>', default=1, help='number of partitions for xfold validation, default 4')
+userin.add_argument('--outputfile', required=False, type=str,
+    metavar='<file>', default=None, help='specify name of desired output file in .csv format')
+
+userargs = userin.parse_args()
+
+records = imelib.readinfile(userargs.inputfile)
+
+(prox, distal) = imelib.cutoffsplit(records, userargs.cutoff)
+
+proxcounts = imelib.kmercount(prox, userargs.k)
+distalcounts = imelib.kmercount(distal, userargs.k)
+
+proxfreqs = imelib.kmerfreqs(proxcounts)
+distalfreqs = imelib.kmerfreqs(distalcounts)
+
+trainedimeter = imelib.training(proxfreqs, distalfreqs, userargs.xfold)
+
+(proxscores, distalscores) = imelib.scoring(prox, distal, records, trainedimeter, userargs.k)
+
+imelib.printscores(records, proxscores, distalscores, userargs.outputfile)
