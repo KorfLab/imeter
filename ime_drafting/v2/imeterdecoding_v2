@@ -1,0 +1,39 @@
+import argparse
+import imelib2
+
+userin = argparse.ArgumentParser(description='IMEter version 2.0 decoder')
+userin.add_argument('--model', type=str, metavar='<file>',
+	help='IMEter model file')
+userin.add_argument('--fasta', type=str, metavar='<file>',
+	help='input fasta file')
+userin.add_argument('--outfile', type=str, metavar='<file>', required=False,
+	default=None, help='desired output file. Default is stdout')
+userin.add_argument('--don', type=int, metavar='<int>', required=False,
+	default=5, help='length of splice donor site [%(default)i]')
+userin.add_argument('--acc', type=int, metavar='<int>', required=False,
+	default=10, help='length of splice acceptor site [%(default)i]')
+userin.add_argument('--cutoff', type=int, metavar='<int>', required=False,
+	default=400, help='proximal/distal cutoff [%(default)i]')
+
+args = userin.parse_args()
+
+model, k = imelib2.readmodelfile(args.model)
+
+seqs = imelib2.readfastafile(args.fasta)
+
+#print(seqs)
+
+if args.outfile is None:
+	for seq in seqs:
+		name = seq[0].split(maxsplit=1)[0]
+		print(name, imelib2.scoreintron(model, seq[1], k, d=args.don, a=args.acc,
+			cut=args.cutoff))
+else:
+	file = open(args.outfile, "w")
+	file.write('genename, score\n')
+	for seq in seqs:
+		name = seq[0].split(maxsplit=1)[0]
+		score = imelib2.scoreintron(model, seq[1], k, d=args.don, a=args.acc,
+			cut=args.cutoff)
+		file.write(f'{name},{score}\n')
+	file.close()

@@ -4,8 +4,7 @@ import statistics
 import gzip
 import itertools
 
-
-def readfile(infile):
+def readintfile(infile):
 	records = []
 	if infile.endswith('.gz'): fp = gzip.open(infile, 'rt')
 	else:                      fp = open(infile)
@@ -25,6 +24,53 @@ def readfile(infile):
 
 	return(records)
 
+def readmodelfile(infile):
+	model = {}
+	fp = None #lmao lexical scope
+
+	if infile.endswith('.gz'): fp = gzip.open(infile, 'rt')
+	else:                      fp = open(infile)
+
+	for line in fp.readlines():
+		line.rstrip()
+		if line.startswith('$'): continue
+		kmer, score, pfreq, kfreq = line.split()
+		model[kmer] = float(score)
+	k = len(list(model.keys())[0])\
+
+	return(model, k)
+
+def readfastafile(infile):
+	genename = None
+	fp = None
+	seqs = []
+	hold = []
+
+	if infile.endswith('.gz'): fp = gzip.open(infile, 'rt')
+	else:                      fp = open(infile)
+
+	for line in fp.readlines():
+		line = line.rstrip()
+		if line.startswith('>'):
+			if len(hold) > 0:
+				seqs.append((name, ''.join(hold)))
+				name = line[1:]
+				hold = []
+			else:
+				name = line[1:]
+		else:
+			hold.append(line)
+
+	fp.close()
+	return(seqs)
+
+def scoreintron(model, seq, k, d, a, cut):
+	score = 0
+	for i in range(d, len(seq) -k + 1 - a):
+		kmer= seq[i:i+k]
+		if kmer in model: score += model[kmer]
+	return score
+
 def generatekmers(k, init=0, alph='ACGT'):
 	kmers = {}
 	for tuple in itertools.product(alph, repeat=k):
@@ -32,7 +78,6 @@ def generatekmers(k, init=0, alph='ACGT'):
 		kmers[kmer] = init
 
 	return(kmers)
-
 
 def decay(count, rate=0.002):
 	#currently a linear decay after significance cutoff
@@ -46,7 +91,6 @@ def frequencies(counts):
 	for kmer in counts: total += counts[kmer]
 	for kmer in counts: freqs[kmer] = counts[kmer] / total
 	return freqs
-
 
 def train_imeter2(records, cut=400, k=5, d=5, a=10, sig=500):
 

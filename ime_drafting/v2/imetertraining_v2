@@ -16,12 +16,11 @@ userin.add_argument('--k', type=int, metavar='<int>', required=False,
 userin.add_argument('--sig', type=int, metavar='<int>', required=False,
 	default=500, help='cutoff for decaying kmer significant [%(default)i]')
 userin.add_argument('--outfile', type=str, metavar='<file>', required=False,
-	default=None, help='name of output file. Otherwise will print to STDOUT')
-userin.add_argument('--delim', type=str, metavar='<str>', required=False,
-	default=',', help='delimiter for outfile, default is ,')
+	default=None, help='name of .model file. Otherwise will print to STDOUT')
+
 args = userin.parse_args()
 
-records = imelib2.readfile(args.infile)
+records = imelib2.readintfile(args.infile)
 
 imeter, pfreqs, dfreqs = imelib2.train_imeter2(records, cut=args.cutoff,
 	k=args.k, a=args.acc, d=args.don, sig=args.sig)
@@ -32,7 +31,7 @@ if args.outfile is None:
 		print(kmer, imeter[kmer], pfreqs[kmer], dfreqs[kmer])
 else:
 	file = open(args.outfile, "w")
-	file.write('kmers,score,proximalfreq,distalfreq\n')
+	file.write(f'$ kmers,score,proximalfreq,distalfreq\n')
 	for kmer in imeter:
-		file.write(f'{kmer}{args.delim}{imeter[kmer]}{args.delim}{pfreqs[kmer]}{args.delim}{dfreqs[kmer]}\n')
+		file.write(f'{kmer} {imeter[kmer]} {pfreqs[kmer]} {dfreqs[kmer]}\n')
 	file.close()
