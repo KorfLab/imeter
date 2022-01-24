@@ -10,7 +10,9 @@ def read_fasta(filename):
 	if   filename.endswith('.gz'): fp = gzip.open(filename, 'rt')
 	else:                          fp = open(filename)
 
-	for line in fp.readlines():
+	while True:
+		line = fp.readline()
+		if line == '': break
 		line = line.rstrip()
 		if line.startswith('>'):
 			if len(seqs) > 0:
