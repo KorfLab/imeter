@@ -34,20 +34,21 @@ The file looks like this (4 lines shown of 142,779):
 	AT3G02220.1     753     870     -       331     309     542     2861    2968    2       504     340     839     48      503     GTACTTGTACCTTGAAGACAGTCTTTCTTCTACTTATGCTAGATGCTGGTTTCCTTAAGAGTGGGTTTAGTAGACAAGATATTAAACTAATCTTGAGGTAATTATTCGTTTCTCGCAG
 	AT3G02220.1     565     688     -       283     249     571     2568    2308    5       471     374     697     25      265     GTTAGTGTTTTCTTTCTTTGCTTTTGTTCTCGTACTTTCTTGGCTAATTAGAGTGTATAGATCAGTATCTTGTTTTATAAGTTGATGTGTTATGGTATTGAAATGGGTATGAAACTGATAACAG
 
+## Version 1 ##
+
+The v1 directory contains a reimplementation of IMEter version 1.0 as published. The results will be a little different because the training set for the original version is different from the `at_ime_master.gz` included in the `data` directory.
+
+## Version 3 ##
+
+The v1 directory contains some ideas of a better implementation of IMEter 1.0. It is not a follow-up of version 2.0. Some things to address in version 3:
+
++ Counting of both strands.
++ Not splitting the data set into proximal and distal. Instead, use a proximal weight based on distance. Distal weight is 1 - proximal.
+
+
 ## Notes ##
 
 + Leaf tissue is where the original experiments were done
 + Don't forget to count both strands
++ Something with tissues?
 + Deal with alternative isoforms
-+ Some sequences with degenerate symbols (e.g. Y)
-+ Proper program with argparse
-+ Put functions into some shared library
-+ Trainer program
-+ Decoder program
-+ Scientific studies
-+ Experimental data and controls
-+ Design actual projects
-+ Counting
-	+ Kmer-based
-	+ length normalized
-	+ Expression
