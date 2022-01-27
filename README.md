@@ -40,7 +40,7 @@ The v1 directory contains a reimplementation of IMEter version 1.0 as published.
 
 ## Version 3 ##
 
-The v1 directory contains some ideas of a better implementation of IMEter 1.0. It is not a follow-up of version 2.0. Some things to address in version 3:
+The v3 directory contains some ideas of a better implementation of IMEter 1.0. It is not a follow-up of version 2.0. Some things to address in version 3:
 
 + Counting of both strands.
 + Not splitting the data set into proximal and distal. Instead, use a proximal weight based on distance. Distal weight is 1 - proximal.
@@ -49,6 +49,5 @@ The v1 directory contains some ideas of a better implementation of IMEter 1.0. I
 ## Notes ##
 
 + Leaf tissue is where the original experiments were done
-+ Don't forget to count both strands
-+ Something with tissues?
-+ Deal with alternative isoforms
++ Something with tissues in the next experiments?
++ Deal with alternative isoforms somehow
