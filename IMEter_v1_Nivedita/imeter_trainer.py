@@ -18,6 +18,7 @@ def getFrequency(kmerList, kmerCount):
         frequency[kmer] = kmerList[kmer] / kmerCount
     return frequency
 
+#Returns a dictionary that contains all the kmers and their IMEter scores
 def IMEter(proxFrequency,distFrequency):
     IMEter = {}
     for kmer in proxFrequency:
@@ -59,30 +60,8 @@ while True:
 f.close()
 
 #compute kmer frequencies
-
 proximal_freq = getFrequency(proximal_count,totalprox)
 distal_freq = getFrequency(distal_count,totaldist)
 
 #calculate IMEter
-
 IMEter = IMEter(proximal_freq, distal_freq)
-print(IMEter)
-
-'''
-#readfile = korflib.read_fasta('')
-f = gzip.open('mini.gz', 'rt')
-while True:
-    line = f.readline()
-    if line == '': break
-
-    data = line.split()
-    seq = data[-1]
-    score = 0
-
-    for i in range(D,len(seq)-K-A+1):
-        kmer = seq[i:i+K]
-        score += IMEter[kmer]
-        print(kmer, score) '''
-#f.close()
-
-#print(score)
