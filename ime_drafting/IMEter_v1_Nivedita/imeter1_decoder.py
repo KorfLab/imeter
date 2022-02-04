@@ -1,5 +1,5 @@
 import gzip
-
+import sys
 
 def get_filepointer(filename):
 	fp = None
@@ -32,22 +32,26 @@ def read_fasta(filename):
 	yield(name, ''.join(seqs))
 	fp.close()
 
-def score(seq, D=5, K=2, A=10):
-    score = 0
+def imeter(seq, K, model, D=5, A=10):
+    s = 0
     for i in range(D,len(seq)-K-A+1):
         kmer = seq[i:i+K]
-        score += IMEter[kmer]
-        print(kmer, score)
+        s += model[kmer]
+    return s
 
-'''
-D = 5 #length of splice donor site
-K = 2 #kmer size
-A = 10 #length of splice acceptor site
-'''
-readfile = []
-readfile = read_fasta('db_IME_Rose_WT_introns.fa')
-for seq in readfile:
-    print(score(seq[1]))
+model = {}
+K = None
+fp = open(sys.argv[1])
+for line in fp.readlines():
+    kmer, score = line.split()
+    K = len(kmer)
+    model[kmer] = float(score)
+
+
+
+for name, seq in read_fasta('db_IME_Rose_WT_introns.fa'):
+    s = imeter(seq, K, model)
+    print(name, s)
 
 
 #f = gzip.open('mini.gz', 'rt')
