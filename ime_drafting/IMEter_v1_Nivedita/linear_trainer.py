@@ -9,7 +9,7 @@ parser = argparse.ArgumentParser(description='IMEter trainer')
 parser.add_argument('trainer', type=str, help='File used for getting training set')
 args = parser.parse_args()
 
-#Returns a dictionary of all kmers possible with a value of their count
+#Returns a dictionary of all kmers possible with a value of their count set to 0
 def getAllKmers(size):
     allKmers = {}
     for kmer in itertools.product('ACGT', repeat=size):
@@ -27,6 +27,7 @@ def getFrequency(kmers):
         frequency[kmer] = kmers[kmer] / total
     return frequency
 
+#Assigns different weights based on where the kmer is???
 def linear(num, start, slope):
     if num < start:
         p_weight = 1.0
@@ -45,6 +46,8 @@ A = 10 #length of splice acceptor site
 proximal_count = getAllKmers(K) #counts of each kmer - proximal
 distal_count = getAllKmers(K) #counts of each kmer - distal
 
+# Do we need proximal/distal if we are using weights?
+
 #get the counts
 f = gzip.open(args.trainer, 'rt')
 while True:
@@ -61,9 +64,12 @@ while True:
     for i in range(D,len(seq)-K-A+1):
         kmer = seq[i:i+K]
         if kmer in proximal_count:
+            # counts proximal value according to weight
             proximal_count[kmer] += linear(i, 400, 1/400)[0]
         if kmer in distal_count:
+            # counts distal value according to weight
             distal_count[kmer] += linear(i, 400, 1/400)[1]
+        #print(kmer, proximal_count[kmer], distal_count[kmer])
 f.close()
 
 #compute kmer frequencies
