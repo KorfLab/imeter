@@ -3,7 +3,6 @@ import math
 import itertools
 import sys
 import argparse
-import kmer_weights
 
 #using ArgParse
 parser = argparse.ArgumentParser(description='IMEter trainer')
@@ -28,6 +27,17 @@ def getFrequency(kmers):
         frequency[kmer] = kmers[kmer] / total
     return frequency
 
+def linear(num, start, slope):
+    if num < start:
+        p_weight = 1.0
+        d_weight = 0.0
+    elif (num - start) * slope >= 1:
+        p_weight = 0.0
+        d_weight = 1.0
+    else:
+        d_weight = (num - start) * slope
+        p_weight = 1 - d_weight
+    return p_weight, d_weight
 
 D = 5 #length of splice donor site
 K = 5 #kmer size
@@ -42,7 +52,7 @@ while True:
     if line == '': break
 
     data = line.split()
-    begin = data[1]
+    #begin = data[1]
     strand = data[3]
     seq = data[-1]
     if strand != '+':
@@ -50,12 +60,10 @@ while True:
 
     for i in range(D,len(seq)-K-A+1):
         kmer = seq[i:i+K]
-        if int(begin) < 400:
-            if kmer in proximal_count:
-                proximal_count[kmer] += 1
-        else:
-            if kmer in distal_count:
-                distal_count[kmer] += 1
+        if kmer in proximal_count:
+            proximal_count[kmer] += linear(i, 400, 1/400)[0]
+        if kmer in distal_count:
+            distal_count[kmer] += linear(i, 400, 1/400)[1]
 f.close()
 
 #compute kmer frequencies

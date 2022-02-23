@@ -1,7 +1,7 @@
-
-formatter = '{0:.3f}'
+from sklearn.metrics import r2_score
 
 def linear(num, start, slope):
+    #formatter = '{0:.3f}'
     if num < start:
         p_weight = 1.0
         d_weight = 0.0
@@ -11,24 +11,32 @@ def linear(num, start, slope):
     else:
         d_weight = (num - start) * slope
         p_weight = 1 - d_weight
-    p_weight = float(formatter.format(p_weight))
-    d_weight = float(formatter.format(d_weight))
+    #p_weight = float(formatter.format(p_weight))
+    #d_weight = float(formatter.format(d_weight))
     return p_weight, d_weight
 
 def geometric(num, start, decay_rate):
+    #formatter = '{0:.3f}'
     if num < start:
         p_weight = 1.0
         d_weight = 0.0
     else:
         p_weight = (1.0 - decay_rate) ** (num - start)
         d_weight = 1 - p_weight
-    p_weight = float(formatter.format(p_weight))
-    d_weight = float(formatter.format(d_weight))
+    #p_weight = float(formatter.format(p_weight))
+    #d_weight = float(formatter.format(d_weight))
     return p_weight, d_weight
 
-for i in range(50):
-    print('L', i+1, linear(i+1,10,0.05))
-    print('G', i+1, geometric(i+1,10,0.05))
+for i in range(1):
+    pl, dl = linear(i+1,100,1/400)
+    pg, dg = geometric(i+1,0,1/400)
+    #print(f'{i+1}\t{pl:.4f}\t{pg}')
+    #print('L', i+1, linear(i+1,10,0.05))
+    #print('G', i+1, geometric(i+1,10,0.05))
+
+ime = [12, 10, 4, 0]
+exp = [6, 5, 2, 0]
+print(r2_score(ime, exp))
 
 '''
 def weights(start,end,total):
