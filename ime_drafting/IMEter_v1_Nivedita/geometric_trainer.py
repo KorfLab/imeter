@@ -3,14 +3,15 @@ import math
 import itertools
 import sys
 import argparse
-import kmer_weights
 
 #using ArgParse
 parser = argparse.ArgumentParser(description='IMEter trainer')
 parser.add_argument('trainer', type=str, help='File used for getting training set')
+parser.add_argument('offset',type=int, help='offset')
+parser.add_argument('decay_rate',type=float, help='decay_rate')
 args = parser.parse_args()
 
-#Returns a dictionary of all kmers possible with a value of their count
+#Returns a dictionary of all kmers possible with a value of their count set to 0
 def getAllKmers(size):
     allKmers = {}
     for kmer in itertools.product('ACGT', repeat=size):
@@ -28,6 +29,15 @@ def getFrequency(kmers):
         frequency[kmer] = kmers[kmer] / total
     return frequency
 
+#Assigns different weights based on where the kmer is???
+def geometric(num, start, decay_rate):
+    if num < start:
+        p_weight = 1.0
+        d_weight = 0.0
+    else:
+        p_weight = (1.0 - decay_rate) ** (num - start)
+        d_weight = 1 - p_weight
+    return p_weight, d_weight
 
 D = 5 #length of splice donor site
 K = 5 #kmer size
@@ -42,7 +52,7 @@ while True:
     if line == '': break
 
     data = line.split()
-    begin = data[1]
+    #begin = data[1]
     strand = data[3]
     seq = data[-1]
     if strand != '+':
@@ -50,12 +60,14 @@ while True:
 
     for i in range(D,len(seq)-K-A+1):
         kmer = seq[i:i+K]
-        if int(begin) < 400:
-            if kmer in proximal_count:
-                proximal_count[kmer] += 1
-        else:
-            if kmer in distal_count:
-                distal_count[kmer] += 1
+        pw, dw = geometric(i, args.offset, args.decay_rate)
+        if kmer in proximal_count:
+            # counts proximal value according to weight
+            proximal_count[kmer] += pw
+        if kmer in distal_count:
+            # counts distal value according to weight
+            distal_count[kmer] += dw
+        #print(kmer, proximal_count[kmer], distal_count[kmer])
 f.close()
 
 #compute kmer frequencies

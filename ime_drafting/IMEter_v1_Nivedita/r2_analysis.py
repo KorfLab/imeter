@@ -7,6 +7,8 @@ import argparse
 
 parser = argparse.ArgumentParser(description='R2 values')
 parser.add_argument('introns', type=str, help='file containing scored introns')
+parser.add_argument('offset',type=int, help='offset')
+parser.add_argument('slope',type=str, help='slope')
 args = parser.parse_args()
 
 f = open(args.introns)
@@ -17,16 +19,27 @@ while True:
     if line == '': break
 
     data = line.split()
-    #print(data)
     exp.append(float(data[2][1:]))
     ime.append(float(data[-1]))
 
 
 X = np.array(exp).reshape(-1,1)
 y = ime
-#a = np.array(ime).reshape(-1,1)
-regr = linear_model.LinearRegression()
-#print(X,y)
 reg = LinearRegression().fit(X, y)
-print(reg.score(X,y))
-#print(reg.predict(a))
+#print('Coefficients: ', reg.coef_)
+r2 = str(reg.score(X,y))
+txt = 'Offset: ' + str(args.offset) + ' Slope: ' + args.slope + ' R^2: '+r2 + '\n'
+#print(txt)
+f = open('Results','a')
+f.write(txt)
+f.close()
+#y_pred = reg.predict((X))
+#print(y_pred)
+
+'''
+plt.scatter(X,y, color='black')
+plt.plot(X,y_pred, color='blue', linewidth=3)
+plt.xticks(())
+plt.yticks(())
+plt.show()
+'''
