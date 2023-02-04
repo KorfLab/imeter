@@ -50,7 +50,7 @@ def train(filename, model, offset, decay, k, a, d):
 		f = line.split()
 		beg = int(f[1])
 		seq = f[-1]
-		for i in range(d, len(seq) -k + 1 + a):
+		for i in range(d, len(seq) -k + 1 - a):
 			kmer = seq[i:i+k]
 			if kmer not in prox: continue
 			x = beg + i
