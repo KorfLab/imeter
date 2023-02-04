@@ -32,7 +32,7 @@ def train_imeter1(filename, k=5, d=5, a=10, t=400):
 		f = line.split()
 		beg = int(f[1])
 		seq = f[-1]
-		for i in range(d, len(seq) -k + 1 + a):
+		for i in range(d, len(seq) -k + 1 - a):
 			kmer = seq[i:i+k]
 			if kmer not in prox: continue
 			if beg <= t: prox[kmer] += 1
