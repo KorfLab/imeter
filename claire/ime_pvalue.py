@@ -1,6 +1,7 @@
 import numpy as np
 import argparse
 import gzip
+import statistics
 
 parser = argparse.ArgumentParser()
 parser.add_argument("filename", help="enter read file", type=str)
@@ -45,15 +46,25 @@ def get_kmers(sequences, k):
     
     
 def get_CG_content(sequences):
+    # get avg / std dev of nuc. % dist.
     # could also do for dinuc.
     freq = {'A':0,'T':0,'C':0, 'G':0}
-    for col in sequences.T:
-        for row in col:
-            freq[row] += 1
-    tot = sum(freq.values())
-    for key, value in freq.items():
-        freq[key] = value/tot
-    return freq
+    freqs = {'A':[],'T':[],'C':[], 'G':[]}
+    stdDev = {}
+    avg = {}
+    for ind, row in enumerate(sequences): 
+        for col in row:
+            freq[col] += 1
+        for key in freqs.keys():
+            freqs[key].append(freq[key])
+        freq = {'A':0,'T':0,'C':0, 'G':0}
+        tot = len(row)
+        for key, value in freqs.items(): # get probability
+            freqs[key] = value[:ind] + [value[ind:ind+1][0]/tot] + value[ind+1:] 
+    for key, value in freqs.items():
+        avg[key] = sum(value)/len(value)
+        stdDev[key] = statistics.stdev(value)   
+    return freqs, avg, stdDev
     
 def p_value(sequences):
     # p-value of proximal vs distal introns
@@ -66,8 +77,9 @@ def p_value(sequences):
     prox, dist = parse_file(filename)
     pkmers = get_kmers(prox, 4)
     dkmers = get_kmers(dist, 4)
-    prob_prox = get_CG_content(prox)
-    expected = 0
+    mean_prox, stdev_prox = get_CG_content(prox)
+    mean_dist, stdev_dist = get_CG_content(dist)
+    
 
 training_dataset, testing_dataset = parse_file(args.filename) 
 prox_sequences, dist_sequences = get_prox_dist(training_dataset)
