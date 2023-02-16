@@ -66,7 +66,19 @@ def get_CG_content(sequences):
         stdDev[key] = statistics.stdev(value)   
     return freqs, avg, stdDev
     
-def p_value(sequences):
+def predicting_prox_dist(prox_seq, dist_seq):
+    # naive bayes:
+        # p(C|x) = p(C)p(x|C) / p(x)
+        # x = feature / trait, C = category
+    # Gaussian naive bayes
+    # prob density 
+    # P(x = trait | category) = 1/ sqrt(2*pi*var) * exp(-(trait - mean)^2 / (2*var))
+    pfreqs, pavg, pstdDev = get_CG_content(prox_sequences)
+    dfreqs, davg, dstdDev = get_CG_content(dist_sequences)
+    prob_C = len(prox_seq) / ((len(prox_seq) + len(dist_seq)
+    
+    
+def p_value(prox, distsequences):
     # p-value of proximal vs distal introns
     # z = (y - mu)/sigma
     # mu = avg = average %T in proximal?
@@ -83,9 +95,12 @@ def p_value(sequences):
 
 training_dataset, testing_dataset = parse_file(args.filename) 
 prox_sequences, dist_sequences = get_prox_dist(training_dataset)
-prox_CG = get_CG_content(prox_sequences)
-dist_CG = get_CG_content(dist_sequences)
-print(prox_CG, dist_CG)
+prox_CG, prox_avg, prox_stdDev = get_CG_content(prox_sequences)
+dist_CG, dist_avg, dist_stdDev = get_CG_content(dist_sequences)
+print("Proximal average: ", prox_avg)
+print("Proximal std dev: ", prox_stdDev)
+print("Distal average: ", dist_avg)
+print("Distal std dev: ", dist_stdDev)
 
 
 
