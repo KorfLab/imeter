@@ -25,9 +25,8 @@ def score_intron(model, seq, k, d=5, a=10):
 
 
 ## main ##
-uid = 1
 model = read_model('v1/imeter1.model') # we are very sorry for hard-coded paths
-
+keep = {}
 for chrom in grimoire.genome.Reader(fasta=sys.argv[1], gff=sys.argv[2]):
 	xd = {} # expression data
 	for f in chrom.ftable.features:
@@ -63,10 +62,17 @@ for chrom in grimoire.genome.Reader(fasta=sys.argv[1], gff=sys.argv[2]):
 				rb = intron.beg - len(e5seq) # region begin
 				re = intron.end + len(e3seq) # region end
 				loc = f'{chrom.name}:{rb}-{re}'
-				print(f'>eie-{uid} {loc} {st} {tx.id} {ib}-{ie} {xs} {ime1:.1f}')
-				print(e5seq)
-				print(iseq)
-				print(e3seq)
-				uid += 1
 
+				if iseq not in keep:
+					keep[iseq] = {
+						'loc': f'{loc} {st} {tx.id} {ib}-{ie} {xs} {ime1:.1f}',
+						'e5': e5seq,
+						'e3': e3seq,
+					}
 
+for n, (iseq, d) in enumerate(keep.items()):
+	print(f'>eie-{n} {d["loc"]}')
+	print(d['e5'])
+	print(iseq.lower())
+	print(d['e3'])
+	
