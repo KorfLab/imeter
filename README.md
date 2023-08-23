@@ -51,3 +51,11 @@ The v3 directory contains some ideas of a better implementation of IMEter 1.0. I
 + Leaf tissue is where the original experiments were done
 + Something with tissues in the next experiments?
 + Deal with alternative isoforms somehow
+
+
+## EIE things ##
+
+In an effort to find orthologous and paralogous introns across species, there
+is an `eie.fa` file that has exon-intron-exon sequences. The introns are chosen
+to be good IME candidates. See the `eie_build.py` script for how this works.
+

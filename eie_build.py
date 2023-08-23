@@ -52,15 +52,18 @@ for chrom in grimoire.genome.Reader(fasta=sys.argv[1], gff=sys.argv[2]):
 				
 				e5seq = tx.cdss[i].seq_str()
 				e3seq = tx.cdss[i+1].seq_str()
-				# need enough sequence to do alignment
-				if len(e5seq) < 50: continue
+				if len(e5seq) < 50: continue # need enough seq to align
 				if len(e3seq) < 50: continue
 				
 				ib = intron.beg - gene.beg
 				ie = intron.end - gene.beg
+				if ib > 600: continue # prefer introns near TSS
+				
 				st = intron.strand
-				loc = f'{chrom.name}:{isig}'
-				print(f'>eie{uid} {loc} {tx.id} {ib} {ie} {st} {xs} {ime1:.1f}')
+				rb = intron.beg - len(e5seq) # region begin
+				re = intron.end + len(e3seq) # region end
+				loc = f'{chrom.name}:{rb}-{re}'
+				print(f'>eie-{uid} {loc} {st} {tx.id} {ib}-{ie} {xs} {ime1:.1f}')
 				print(e5seq)
 				print(iseq)
 				print(e3seq)
