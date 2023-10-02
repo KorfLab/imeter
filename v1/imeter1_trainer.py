@@ -22,8 +22,8 @@ def count2freq(count):
 def train_imeter1(filename, k=5, d=5, a=10, t=400):
 
 	# counts
-	prox = kmers(k)
-	dist = kmers(k)
+	prox = kmers(k, init=1)
+	dist = kmers(k, init=1)
 
 	if filename.endswith('.gz'): fp = gzip.open(filename, 'rt')
 	else:                        fp = open(filename)
